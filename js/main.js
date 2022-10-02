@@ -12,7 +12,9 @@ async function main() {
     }
     const response = await postApi.getAll(queryParams)
     console.log('all response', response)
-  } catch (error) {}
+  } catch (error) {
+    console.log('response error', error)
+  }
 }
 
 main()
