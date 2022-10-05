@@ -42,24 +42,23 @@ function renderPostList(postList) {
 
 function renderPagination(pagination) {
   const ulPagination = document.getElementById('pagination')
-  console.log('ulPagination', ulPagination)
-
   if (!pagination || !ulPagination) return
 
   //calc totalPages
   const { _page, _limit, _totalRows } = pagination
   const totalPages = Math.ceil(_totalRows / _limit)
-  console.log('totalRows', totalRows)
+
   //save page and totalPages to ulPagination
   ulPagination.dataset.page = _page
   ulPagination.dataset.totalPages = totalPages
 
   //check if enable/disable prev/next links
-  if (_page <= 1) ulPagination.firstElementChild?.classList.add('disabled')
-  else ulPagination.firstElementChild?.clasList.remove('disabled')
+  if (_page <= 1) {
+    ulPagination.firstElementChild?.classList.add('disabled')
+  } else ulPagination.firstElementChild?.classList.remove('disabled')
 
   if (_page >= totalPages) ulPagination.lastElementChild?.classList.add('disabled')
-  else ulPagination.lastElementChild?.clasList.remove('disabled')
+  else ulPagination.lastElementChild?.classList.remove('disabled')
 }
 
 function handlePrevClick(e) {
