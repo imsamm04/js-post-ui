@@ -25,13 +25,11 @@ function createPostElement(post) {
     })
   }
 
-  console.log('day format')
   setTextContent(liElement, '[data-id="timeSpan"]', ` - ${dayjs(post.updateAt).fromNow()}`)
   return liElement
 }
 
 function renderPostList(postList) {
-  console.log('postList', postList)
   if (!Array.isArray(postList) || postList.length === 0) return
   const ulElement = document.getElementById('postsList')
   if (!ulElement) return
@@ -82,7 +80,6 @@ async function handleFilterChange(filterName, filterValue) {
 
 function handlePrevClick(e) {
   e.preventDefault()
-  console.log('prev click')
   const ulPagination = getUlPagiantion()
   if (!ulPagination) return
 
@@ -95,7 +92,6 @@ function handleNextClick(e) {
   e.preventDefault()
   const ulPagination = getUlPagiantion()
   if (!ulPagination) return
-  console.log('next click')
   const page = Number.parseInt(ulPagination.dataset.page) || 99
   const totalPages = ulPagination.dataset.totalPages
 
@@ -120,8 +116,16 @@ function initPagination() {
   if (nextLink) {
     nextLink.addEventListener('click', handleNextClick)
   }
+}
 
-  // console.log('abc', { prevLink, nextLink })
+function initSearch() {
+  const searchInput = document.getElementById('searchInput')
+  if (!searchInput) return
+
+  searchInput.addEventListener('input', (event) => {
+    //trigger search
+    console.log('event.target.value', event.target.value)
+  })
 }
 
 function initURL() {
@@ -137,18 +141,11 @@ function initURL() {
   try {
     initPagination()
     initURL()
-
-    // const queryParams = {
-    //   _page: 1,
-    //   _limit: 6,
-    // }
-
     const queryParams = new URLSearchParams(window.location.search)
-    console.log('queryParams', queryParams.toString())
-
     const { data, pagination } = await postApi.getAll(queryParams)
     renderPostList(data)
     renderPagination(pagination)
+    initSearch()
   } catch (error) {
     console.log('response error', error)
   }
