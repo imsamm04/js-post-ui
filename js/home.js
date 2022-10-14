@@ -27,7 +27,6 @@ async function handleFilterChange(filterName, filterValue) {
 
     history.pushState({}, '', url)
     const queryParams = url.searchParams
-    debugger
 
     initPagination({
       elementId: 'pagination',

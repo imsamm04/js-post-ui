@@ -24,8 +24,21 @@ export function createPostElement(post) {
   }
 
   setTextContent(liElement, '[data-id="timeSpan"]', ` - ${dayjs(post.updateAt).fromNow()}`)
+
+  //go to postList detail
+
+  const divElement = liElement.firstElementChild
+
+  if (divElement) {
+    divElement.addEventListener('click', () => {
+      window.location.assign(`/post-detail.html?id=${post.id}`)
+    })
+  }
+
   return liElement
 }
+
+// return liElement
 
 export function renderPostList(elementId, postList) {
   if (!Array.isArray(postList)) return
