@@ -139,22 +139,20 @@ function initSearch() {
   searchInput.addEventListener('input', debounceSearch)
 }
 
-function initURL() {
-  const url = new URL(window.location)
-  if (!url.searchParams.get('_page')) url.searchParams.set('_page', 1)
-  if (!url.searchParams.get('_limit')) url.searchParams.set('_limit', 6)
-  history.pushState({}, '', url)
-}
-
 ;(async () => {
   try {
+    const url = new URL(window.location)
+    if (!url.searchParams.get('_page')) url.searchParams.set('_page', 1)
+    if (!url.searchParams.get('_limit')) url.searchParams.set('_limit', 6)
+
+    history.pushState({}, '', url)
+    const queryParams = url.searchParams
+
     initPagination()
-    initURL()
-    const queryParams = new URLSearchParams(window.location.search)
+    initSearch()
     const { data, pagination } = await postApi.getAll(queryParams)
     renderPostList(data)
     renderPagination(pagination)
-    initSearch()
   } catch (error) {
     console.log('response error', error)
   }
