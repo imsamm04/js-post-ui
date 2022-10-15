@@ -31,7 +31,20 @@ export function createPostElement(post) {
 
   if (divElement) {
     divElement.addEventListener('click', () => {
+      console.log('parent click')
       window.location.assign(`/post-detail.html?id=${post.id}`)
+    })
+  }
+
+  // add click event for edit button
+
+  const editButton = liElement.querySelector('[data-id="edit"]')
+  if (editButton) {
+    editButton.addEventListener('click', (e) => {
+      console.log('edit click')
+      //prevent click to parent
+      e.stopPropagation()
+      window.location.assign(`/add-edit-post.html?id=${post.id}`)
     })
   }
 
