@@ -71,19 +71,54 @@ function setFormValues(form, formValues) {
   setBackgroundImage(document, '#postHeroImage', formValues?.imageUrl)
 }
 
+function showLoading(form) {
+  const button = form.querySelector('[name="submit"]')
+  if (button) {
+    button.disabled = true
+    button.textContent = 'Saving...'
+  }
+}
+
+function hideLoading(form) {
+  const button = form.querySelector('[name="submit"]')
+  if (button) {
+    button.disabled = false
+    button.textContent = 'Save'
+  }
+}
+
 export function initPostForm({ formId, defaultValues, onSubmit }) {
   const form = document.getElementById(formId)
   if (!form) return
+
+  let submitting = false
   setFormValues(form, defaultValues)
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault()
-    //get form value
+
+    // Prevent other submission
+    if (submitting) {
+      debugger
+      console.log('one is submit timg')
+      return
+    }
+
+    showLoading(form)
+    submitting = true
+
+    // get form values
     const formValues = getFormValues(form)
     formValues.id = defaultValues.id
-    //validation
-    if (!validatePostForm(form, formValues)) return
-    //submit if valid value
-    onSubmit?.(formValues)
+
+    // validation
+    // if valid trigger submit callback
+    // otherwise, show validation errors
+    const isValid = await validatePostForm(form, formValues)
+    if (isValid) await onSubmit?.(formValues)
+
+    // always hide loading no matter form is valid or not
+    hideLoading(form)
+    submitting = false
   })
 }

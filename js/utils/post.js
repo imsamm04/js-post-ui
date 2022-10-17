@@ -48,6 +48,19 @@ export function createPostElement(post) {
     })
   }
 
+  //delete event
+  const removeButton = liElement.querySelector('[data-id="remove"]')
+  if (removeButton) {
+    removeButton.addEventListener('click', () => {
+      const customEvent = new CustomEvent('post-delete', {
+        bubbles: true,
+        detail: post,
+      })
+
+      removeButton.dispatchEvent(customEvent)
+    })
+  }
+
   return liElement
 }
 
