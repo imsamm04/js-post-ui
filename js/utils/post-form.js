@@ -1,4 +1,5 @@
 import { setBackgroundImage, setFieldValue } from './common'
+import * as yup from 'yup'
 
 function getFormValues(form) {
   const formValues = {}
@@ -13,6 +14,52 @@ function getFormValues(form) {
   }
 
   return formValues
+}
+
+function getPostSchema() {
+  return yup.object().shape({
+    title: yup.string().required('Please enter title'),
+    author: yup
+      .string()
+      .required('Please enter author')
+      .test(
+        'at-least-two-words',
+        'Please enter at least two words',
+        (value) => value.split(' ').filter((x) => !!x && x.length >= 3).length >= 2
+      ),
+    description: yup.string(),
+  })
+}
+
+async function validatePostForm(form, formValues) {
+  try {
+    // reset previous errors
+    ;['title', 'author', 'imageUrl', 'image'].forEach((name) => setFieldError(form, name, ''))
+
+    // start validating
+    const schema = getPostSchema()
+    await schema.validate(formValues, { abortEarly: false })
+  } catch (error) {
+    const errorLog = {}
+
+    if (error.name === 'ValidationError' && Array.isArray(error.inner)) {
+      for (const validationError of error.inner) {
+        const name = validationError.path
+
+        // ignore if the field is already logged
+        if (errorLog[name]) continue
+
+        // set field error and mark as logged
+        setFieldError(form, name, validationError.message)
+        errorLog[name] = true
+      }
+    }
+  }
+
+  // add was-validated class to form element
+  const isValid = form.checkValidity()
+  if (!isValid) form.classList.add('was-validated')
+  return isValid
 }
 
 function setFormValues(form, formValues) {
@@ -31,12 +78,12 @@ export function initPostForm({ formId, defaultValues, onSubmit }) {
 
   form.addEventListener('submit', (event) => {
     event.preventDefault()
-    console.log('submit form')
     //get form value
     const formValues = getFormValues(form)
-    console.log('formValues', formValues)
+    formValues.id = defaultValues.id
     //validation
-
+    if (!validatePostForm(form, formValues)) return
     //submit if valid value
+    onSubmit?.(formValues)
   })
 }
