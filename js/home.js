@@ -59,10 +59,6 @@ function RegisterPostDeleteEvent() {
       defaultParams: queryParams,
       onChange: (value) => handleFilterChange('title_like', value),
     })
-    // const { data, pagination } = await postApi.getAll(queryParams)
-    // renderPostList('postsList', data)
-
-    // renderPagination('pagination', pagination)
     handleFilterChange()
   } catch (error) {
     console.log('response error', error)
