@@ -19,6 +19,12 @@ async function handleFilterChange(filterName, filterValue) {
   }
 }
 
+function RegisterPostDeleteEvent() {
+  document.addEventListener('post-delete', (event) => {
+    console.log('remove post - click'), event.detail
+  })
+}
+
 ;(async () => {
   try {
     const url = new URL(window.location)
@@ -33,7 +39,7 @@ async function handleFilterChange(filterName, filterValue) {
       defaultParams: queryParams,
       onChange: (page) => handleFilterChange('_page', page),
     })
-
+    RegisterPostDeleteEvent()
     initSearch({
       elementId: 'searchInput',
       defaultParams: queryParams,

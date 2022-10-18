@@ -99,7 +99,6 @@ export function initPostForm({ formId, defaultValues, onSubmit }) {
 
     // Prevent other submission
     if (submitting) {
-      debugger
       console.log('one is submit timg')
       return
     }

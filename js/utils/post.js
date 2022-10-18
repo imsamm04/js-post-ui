@@ -10,6 +10,7 @@ export function createPostElement(post) {
   const postTemplate = document.getElementById('postTemplate')
   if (!postTemplate) return
   const liElement = postTemplate.content.firstElementChild.cloneNode(true)
+
   if (!liElement) return
 
   setTextContent(liElement, '[data-id="title"]', post.title)
@@ -28,10 +29,13 @@ export function createPostElement(post) {
   //go to postList detail
 
   const divElement = liElement.firstElementChild
-
   if (divElement) {
-    divElement.addEventListener('click', () => {
-      console.log('parent click')
+    divElement.addEventListener('click', (event) => {
+      // S2: if event is triggered from menu --> ignore
+      console.log('parent ignore click')
+      const menu = liElement.querySelector('[data-id="menu"]')
+      if (menu && menu.contains(event.target)) return
+
       window.location.assign(`/post-detail.html?id=${post.id}`)
     })
   }
